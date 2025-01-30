@@ -53,8 +53,7 @@ async def send_text_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE,
 async def send_image(update: Update, context: ContextTypes.DEFAULT_TYPE,
                      name: str) -> Message:
     with open(f'resources/images/{name}.jpg', 'rb') as image:
-        return await context.bot.send_photo(chat_id=update.effective_chat.id,
-                                            photo=image)
+        return await context.bot.send_photo(chat_id=update.effective_chat.id, photo=image)
 
 
 # отображает команду и главное меню
@@ -63,34 +62,29 @@ async def show_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE,
     command_list = [BotCommand(key, value) for key, value in commands.items()]
     await context.bot.set_my_commands(command_list, scope=BotCommandScopeChat(
         chat_id=update.effective_chat.id))
-    await context.bot.set_chat_menu_button(menu_button=MenuButtonCommands(),
-                                           chat_id=update.effective_chat.id)
+    await context.bot.set_chat_menu_button(menu_button=MenuButtonCommands(), chat_id=update.effective_chat.id)
 
 
 # Удаляем команды для конкретного чата
 async def hide_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.delete_my_commands(
         scope=BotCommandScopeChat(chat_id=update.effective_chat.id))
-    await context.bot.set_chat_menu_button(menu_button=MenuButtonDefault(),
-                                           chat_id=update.effective_chat.id)
+    await context.bot.set_chat_menu_button(menu_button=MenuButtonDefault(), chat_id=update.effective_chat.id)
 
 
 # загружает сообщение из папки  /resources/messages/
 def load_message(name):
-    with open("resources/messages/" + name + ".txt", "r",
-              encoding="utf8") as file:
+    with open("resources/messages/" + name + ".txt", "r", encoding="utf8") as file:
         return file.read()
 
 
 # загружает промпт из папки  /resources/messages/
 def load_prompt(name):
-    with open("resources/prompts/" + name + ".txt", "r",
-              encoding="utf8") as file:
+    with open("resources/prompts/" + name + ".txt", "r", encoding="utf8") as file:
         return file.read()
 
 
-async def default_callback_handler(update: Update,
-                                   context: ContextTypes.DEFAULT_TYPE):
+async def default_callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
     query = update.callback_query.data
     await send_html(update, context, f'You have pressed button with {query} callback')
