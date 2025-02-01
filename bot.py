@@ -8,6 +8,7 @@ from util import (
     load_message,
     send_text,
     send_image,
+    send_html,
     show_main_menu,
     default_callback_handler,
     send_text_buttons,
@@ -80,11 +81,27 @@ async def gpt_msg(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def talk(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик команды /talk """
     dialog.mode = 'talk'
-    print('talk', update.message.text if update.message else 'no msg')
+    await send_image(update, context, 'talk')
+    await send_text_buttons(update, context, load_message('talk'), {
+        'talk_cobain': 'Курт Кобейн - Солист группы Nirvana 🎸',
+        'talk_hawking': 'Стивен Хокинг - Физик 🔬',
+        'talk_nietzsche': 'Фридрих Ницше - Философ 🧠',
+        'talk_queen': 'Елизавета II - Королева Соединённого Королевства 👑',
+        'talk_tolkien': 'Джон Толкиен - Автор книги "Властелин Колец" 📖',
+    })
 
 async def talk_msg(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик сообщений в /talk разделе чата """
-    print('talk_msg', update.message.text if update.message else 'no msg')
+    msg = await send_text(update, context, 'Собеседник впал в задумчивость...')
+    answer = await chat_gpt.add_message(update.message.text)
+    await msg.edit_text(answer)
+
+async def talk_btn(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """ Обработчик нажатия кнопок в разговоре с личностью. """
+    btn_mode = update.callback_query.data
+    await update.callback_query.answer()
+    await send_image(update, context, btn_mode)
+    chat_gpt.set_prompt(load_prompt(btn_mode))
 
 async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик команды /quiz """
@@ -107,5 +124,6 @@ app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, msg_switcher))
 
 # Зарегистрировать обработчик коллбэка можно так:
 app.add_handler(CallbackQueryHandler(random_btn, pattern='^random_.*'))
+app.add_handler(CallbackQueryHandler(talk_btn, pattern='^talk_.*'))
 app.add_handler(CallbackQueryHandler(default_callback_handler))
 app.run_polling()
