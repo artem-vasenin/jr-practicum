@@ -30,9 +30,13 @@ async def msg_switcher(update: Update, context: ContextTypes.DEFAULT_TYPE):
     }
     await actions.get(dialog.mode, start)(update, context)
 
+def clear_dialog():
+    dialog.mode = 'start'
+    dialog.lang = None
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик команды /start тг бота """
-    dialog.mode = 'main'
+    clear_dialog()
     text = load_message('main')
     await send_image(update, context, 'main')
     await send_text(update, context, text)
@@ -47,6 +51,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def random(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик команды /random случайного факта из gpt """
+    clear_dialog()
     dialog.mode = 'random'
     text = load_message('random')
     await send_image(update, context, 'random')
@@ -66,7 +71,7 @@ async def random_btn(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def gpt(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик команды /gpt, тут мы общаемся с великим и могучим ИИ """
-    print('gpt', update.message.text if update.message else 'no msg')
+    clear_dialog()
     dialog.mode = 'gpt'
     text = load_message('gpt')
     await send_image(update, context, 'gpt')
@@ -74,7 +79,6 @@ async def gpt(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def gpt_msg(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик сообщений в /gpt разделе чата """
-    print('gpt_msg', update.message.text if update.message else 'no msg')
     msg = await send_text(update, context, 'Чат шевелит микросхемами...')
     prompt = load_prompt('gpt')
     answer = await chat_gpt.send_question(prompt, update.message.text)
@@ -82,6 +86,7 @@ async def gpt_msg(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def talk(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик команды /talk """
+    clear_dialog()
     dialog.mode = 'talk'
     await send_image(update, context, 'talk')
     await send_text_buttons(update, context, load_message('talk'), {
@@ -107,11 +112,13 @@ async def talk_btn(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик команды /quiz """
+    clear_dialog()
     dialog.mode = 'quiz'
     print('quiz', update.message.text if update.message else 'no msg')
 
 async def translate(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик команды /translate """
+    clear_dialog()
     dialog.mode = 'translate'
     await send_image(update, context, 'translate')
     await send_text_buttons(update, context, load_message('translate'), {
@@ -121,22 +128,22 @@ async def translate(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def translate_btn(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик нажатия кнопок в переводчике. """
-    # btn_mode = update.callback_query.data
-    print('translate_btn', update.callback_query.data if update.callback_query else 'no msg')
-    # if update.callback_query.data == 'random_again':
-    #     await random(update, context)
-    # else:
-    #     await start(update, context)
-    # await send_text(update, context, 'iii')
-    # await update.callback_query.answer()
-    # chat_gpt.set_prompt(load_prompt(btn_mode))
+    btn_mode = update.callback_query.data
+    if btn_mode:
+        dialog.lang = btn_mode
+        await send_text(update, context, load_message(btn_mode))
 
 async def translate_msg(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """ Обработчик сообщений переводчика """
-    print('translate_msg', update.message.text if update.message else 'no msg')
+    text = f'Учитель {"английского" if dialog.lang == "translate_en" else "испанского"} призадумался...'
+    msg = await send_text(update, context, text)
+    prompt = load_prompt(dialog.lang)
+    answer = await chat_gpt.send_question(prompt, update.message.text)
+    await msg.edit_text(answer)
 
 dialog = Dialog()
 dialog.mode = 'start'
+dialog.lang = None
 
 chat_gpt = ChatGptService(GPT_TOKEN)
 app = ApplicationBuilder().token(TG_TOKEN).build()
