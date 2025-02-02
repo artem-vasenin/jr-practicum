@@ -8,7 +8,7 @@ from util import (
     load_message,
     send_text,
     send_image,
-    send_html,
+    # send_html,
     show_main_menu,
     default_callback_handler,
     send_text_buttons,
@@ -26,6 +26,7 @@ async def msg_switcher(update: Update, context: ContextTypes.DEFAULT_TYPE):
         'gpt': gpt_msg,
         'talk': talk_msg,
         'quiz': quiz,
+        'translate': translate_msg,
     }
     await actions.get(dialog.mode, start)(update, context)
 
@@ -40,7 +41,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         'random': 'Узнать случайный интересный факт 🧠',
         'gpt': 'Задать вопрос чату GPT 🤖',
         'talk': 'Поговорить с известной личностью 👤',
-        'quiz': 'Поучаствовать в квизе ❓'
+        'quiz': 'Поучаствовать в квизе ❓',
+        'translate': 'Перевести фразу 🇬🇧'
     })
 
 async def random(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -108,6 +110,31 @@ async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE):
     dialog.mode = 'quiz'
     print('quiz', update.message.text if update.message else 'no msg')
 
+async def translate(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """ Обработчик команды /translate """
+    dialog.mode = 'translate'
+    await send_image(update, context, 'translate')
+    await send_text_buttons(update, context, load_message('translate'), {
+        'translate_en': 'Русско-Английский переводчик 🇷🇺➡️🇬🇧',
+        'translate_es': 'Русско-Испанский переводчик 🇷🇺➡️🇪🇸',
+    })
+
+async def translate_btn(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """ Обработчик нажатия кнопок в переводчике. """
+    # btn_mode = update.callback_query.data
+    print('translate_btn', update.callback_query.data if update.callback_query else 'no msg')
+    # if update.callback_query.data == 'random_again':
+    #     await random(update, context)
+    # else:
+    #     await start(update, context)
+    # await send_text(update, context, 'iii')
+    # await update.callback_query.answer()
+    # chat_gpt.set_prompt(load_prompt(btn_mode))
+
+async def translate_msg(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """ Обработчик сообщений переводчика """
+    print('translate_msg', update.message.text if update.message else 'no msg')
+
 dialog = Dialog()
 dialog.mode = 'start'
 
@@ -119,11 +146,13 @@ app.add_handler(CommandHandler('random', random))
 app.add_handler(CommandHandler('gpt', gpt))
 app.add_handler(CommandHandler('talk', talk))
 app.add_handler(CommandHandler('quiz', quiz))
+app.add_handler(CommandHandler('translate', translate))
 
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, msg_switcher))
 
 # Зарегистрировать обработчик коллбэка можно так:
 app.add_handler(CallbackQueryHandler(random_btn, pattern='^random_.*'))
 app.add_handler(CallbackQueryHandler(talk_btn, pattern='^talk_.*'))
+app.add_handler(CallbackQueryHandler(translate_btn, pattern='^translate_.*'))
 app.add_handler(CallbackQueryHandler(default_callback_handler))
 app.run_polling()
