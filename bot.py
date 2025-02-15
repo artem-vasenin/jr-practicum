@@ -141,6 +141,7 @@ async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE):
     }
     await send_image(update, context, 'quiz')
     await send_text_buttons(update, context, load_message('quiz'), buttons)
+    chat_gpt.set_prompt(load_prompt('quiz'))
 
 
 async def quiz_btn(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -151,7 +152,6 @@ async def quiz_btn(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     btn_mode = update.callback_query.data if not update.callback_query.data == 'quiz_more' else dialog.quiz
     dialog.quiz = btn_mode
-    chat_gpt.set_prompt(load_prompt('quiz'))
     msg = await send_text(update, context, 'Что б такого спросить...')
     try:
         answer = await chat_gpt.add_message(btn_mode)
