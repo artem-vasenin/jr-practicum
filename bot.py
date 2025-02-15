@@ -212,13 +212,11 @@ async def translate_msg(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = await send_text(update, context, text)
     prompt = load_prompt(dialog.lang)
     answer = await chat_gpt.send_question(prompt, update.message.text)
-    await msg.edit_text(answer)
-    # try:
-    #     answer = await chat_gpt.add_message(btn_mode)
-    #     await msg.edit_text(answer)
-    # except Exception as e:
-    #     print(e)
-    #     await msg.edit_text('Ошибка. ЧатGPT слегка прилег...')
+    try:
+        await msg.edit_text(answer)
+    except Exception as e:
+        print(e)
+        await msg.edit_text('Ошибка. ЧатGPT слегка прилег...')
 
 
 dialog = Dialog()
