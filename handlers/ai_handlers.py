@@ -6,7 +6,7 @@ from aiogram.filters import Command
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
 
-from config import GPT_TOKEN, PROXY
+from config import GPT_TOKEN_TWO, PROXY
 from keyboards import kb_back
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
@@ -16,8 +16,8 @@ if os.path.exists(dotenv_path):
 
 ai_router = Router()
 ai_client = AsyncOpenAI(
-    api_key=GPT_TOKEN,
-    # http_client=httpx.AsyncClient(proxy=PROXY)
+    api_key=GPT_TOKEN_TWO,
+    http_client=httpx.AsyncClient(proxy=PROXY)
 )
 
 @ai_router.message(F.text == 'Рандомный факт')
