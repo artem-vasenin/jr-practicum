@@ -17,7 +17,7 @@ from util import (
 
 
 load_dotenv()
-GPT_TOKEN = os.getenv("GPT_TOKEN")
+GPT_TOKEN = os.getenv("GPT_TOKEN_THREE")
 TG_TOKEN = os.getenv("TG_TOKEN")
 
 
