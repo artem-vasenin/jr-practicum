@@ -4,20 +4,18 @@ from aiogram import F, Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from openai import AsyncOpenAI
-from dotenv import load_dotenv
 
-from config import GPT_TOKEN_THREE, PROXY_THREE
+from config import PROXY_API_TOKEN, PROXY_API
+# from config import GPT_TOKEN, PROXY
 from keyboards import kb_back
 
-dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-
-if os.path.exists(dotenv_path):
-    load_dotenv(dotenv_path)
+# token = "sk-proj-" + GPT_TOKEN[:3:-1] if GPT_TOKEN.startswith('gpt:') else GPT_TOKEN
 
 ai_router = Router()
 ai_client = AsyncOpenAI(
-    api_key=GPT_TOKEN_THREE,
-    http_client=httpx.AsyncClient(proxy=PROXY_THREE)
+    api_key=PROXY_API_TOKEN,
+    base_url=PROXY_API
+    # http_client=httpx.AsyncClient(proxy=PROXY_API)
 )
 
 @ai_router.message(F.text == 'Рандомный факт')
