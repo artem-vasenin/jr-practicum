@@ -10,6 +10,13 @@ def kb_start():
     keyboard.adjust(2, 2)
     return keyboard.as_markup(resize_keyboard=True)
 
+def kb_random():
+    keyboard = ReplyKeyboardBuilder()
+    keyboard.button(text='Хочу еще факт!')
+    keyboard.button(text='Назад')
+    keyboard.adjust(2)
+    return keyboard.as_markup(resize_keyboard=True)
+
 def kb_back():
     keyboard = ReplyKeyboardBuilder()
     keyboard.button(text='Назад')
