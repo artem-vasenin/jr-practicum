@@ -1,7 +1,14 @@
 import os
 from dotenv import load_dotenv
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CallbackQueryHandler, MessageHandler, ContextTypes, CommandHandler, filters
+from telegram.ext import (
+    ApplicationBuilder,
+    CallbackQueryHandler,
+    MessageHandler,
+    ContextTypes,
+    CommandHandler,
+    filters,
+)
 
 from gpt import ChatGptService
 from util import (
