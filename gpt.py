@@ -1,5 +1,5 @@
 from openai import OpenAI
-import httpx as httpx
+# import httpx as httpx
 
 
 class ChatGptService:
@@ -9,7 +9,8 @@ class ChatGptService:
     def __init__(self, token):
         token = "sk-proj-" + token[:3:-1] if token.startswith('gpt:') else token
         self.client = OpenAI(
-            http_client=httpx.Client(proxy="http://18.199.183.77:49232"),
+            # http_client=httpx.Client(proxy="http://18.199.183.77:49232"),
+            base_url='https://api.proxyapi.ru/openai/v1',
             api_key=token)
         self.message_list = []
 
