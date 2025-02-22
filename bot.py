@@ -17,7 +17,7 @@ from util import (
 
 
 load_dotenv()
-GPT_TOKEN = os.getenv("GPT_TOKEN_THREE")
+GPT_TOKEN = os.getenv("GPT_TOKEN")
 TG_TOKEN = os.getenv("TG_TOKEN")
 
 
@@ -64,9 +64,13 @@ async def random(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_image(update, context, 'random')
     msg = await send_text(update, context, text)
     prompt = load_prompt('random')
-    answer = await chat_gpt.add_message(prompt)
-    await msg.edit_text(answer)
-    await send_text_buttons(update, context, 'Еще один факт?', {'random_gen': 'Хочу ещё факт', 'random_stop': 'Закончить'})
+    try:
+        answer = await chat_gpt.add_message(prompt)
+        await msg.edit_text(answer)
+        await send_text_buttons(update, context, 'Еще один факт?', {'random_gen': 'Хочу ещё факт', 'random_stop': 'Закончить'})
+    except Exception as e:
+        print(e)
+        await msg.edit_text('Ошибка. ЧатGPT слегка прилег...')
 
 
 async def random_btn(update: Update, context: ContextTypes.DEFAULT_TYPE):
