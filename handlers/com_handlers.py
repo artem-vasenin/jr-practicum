@@ -8,7 +8,7 @@ command_router = Router()
 
 @command_router.message(F.photo)
 async def get_photo(message: Message):
-    ...
+    print(message.photo[-1].file_id)
 
 @command_router.message(F.text == 'Назад')
 @command_router.message(Command('start'))
