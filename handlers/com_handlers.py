@@ -3,6 +3,8 @@ from aiogram.types import Message
 from aiogram.filters import Command
 
 from keyboards import kb_start
+from config import IMG
+from utils import get_msg
 
 command_router = Router()
 
@@ -13,4 +15,9 @@ async def get_photo(message: Message):
 @command_router.message(F.text == 'Назад')
 @command_router.message(Command('start'))
 async def com_start(message: Message):
-    await message.answer(text=f'Hello, {message.from_user.username}!', reply_markup=kb_start())
+    msg = await get_msg('main')
+    await message.answer_photo(
+        photo=IMG['GPT'],
+        caption=msg,
+        reply_markup=kb_start()
+    )

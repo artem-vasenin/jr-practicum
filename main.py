@@ -22,4 +22,4 @@ if __name__ == '__main__':
     try:
         asyncio.run(start_bot())
     except KeyboardInterrupt:
-        ...
+        print('Вах вах! Слюшай, что-то пошло не так!')
