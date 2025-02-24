@@ -23,7 +23,7 @@ async def ai_random(message: Message):
     await message.bot.send_chat_action(message.from_user.id, ChatAction.TYPING)
     caption = await ai_client.text_request([], prompt)
     await message.answer_photo(
-        photo=IMG['RANDOM'],
+        photo=IMG['random'],
         caption=caption,
         reply_markup=kb_random()
     )
