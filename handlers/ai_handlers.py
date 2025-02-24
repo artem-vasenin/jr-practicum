@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 from config import IMG
 from utils import get_text
 from classes import ai_client
-from state.state import FSMState
+from state.state import FSMState, TalkState
 from .com_handlers import com_start
 from keyboards import kb_random, kb_back
 
@@ -36,13 +36,23 @@ async def ai_gpt_req(message: Message, state: FSMContext):
         history.clear()
         return
 
-    prompt = await get_text('gpt', is_prompt=True)
-
     if message.from_user.id not in history:
+        prompt = await get_text('gpt', is_prompt=True)
         history[message.from_user.id] = [{"role": "system", "content": prompt}]
 
     history[message.from_user.id].append({"role": "user", "content": message.text})
     await message.bot.send_chat_action(message.from_user.id, ChatAction.TYPING)
     caption = await ai_client.text_request(history[message.from_user.id], '')
     history[message.from_user.id].append({"role": "assistant", "content": caption})
+    await message.answer(text=caption, reply_markup=kb_back())
+
+
+@ai_router.message(TalkState.wait_for_answer)
+async def ai_gpt_talk(message: Message, state: FSMContext):
+    await message.bot.send_chat_action(message.from_user.id, ChatAction.TYPING)
+    data = await state.get_data()
+    data['dialog'].append({'role': 'user', 'content': message.text})
+    caption = await ai_client.text_request(data['dialog'], '')
+    data['dialog'].append({'role': 'assistant', 'content': caption})
+    await state.update_data(dialog=data['dialog'])
     await message.answer(text=caption, reply_markup=kb_back())
