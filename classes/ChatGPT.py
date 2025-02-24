@@ -1,5 +1,3 @@
-import os
-import aiofiles
 from openai import AsyncOpenAI
 from aiogram.fsm.state import StatesGroup
 
@@ -26,8 +24,3 @@ class ChatGPT(StatesGroup):
         msgs = [{'role': 'system', 'content': prompt}] + messages if prompt else messages
         cmp = await self._client.chat.completions.create(messages=msgs, model=AI_MODEL)
         return cmp.choices[0].message.content
-
-    async def get_text(self, path: str, is_prompt: bool = False):
-        url = os.path.join('resources', 'prompts', path + '.txt') if is_prompt else os.path.join('resources', 'messages', path + '.txt')
-        async with aiofiles.open(url, 'r', encoding='utf-8') as f:
-            return await f.read()
