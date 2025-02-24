@@ -39,7 +39,7 @@ async def ai_gpt_com(message: Message, state: FSMContext):
 
 @command_router.message(F.text == 'Диалог с личностью')
 @command_router.message(Command('talk'))
-async def ai_gpt_com(message: Message, state: FSMContext):
+async def ai_gpt_com(message: Message):
     text = await get_text('talk')
     await message.bot.send_chat_action(message.from_user.id, ChatAction.TYPING)
     await message.answer_photo(
@@ -47,4 +47,3 @@ async def ai_gpt_com(message: Message, state: FSMContext):
         caption=text,
         reply_markup=kb_talk()
     )
-    # await state.set_state(FSMState.wait_for_req)

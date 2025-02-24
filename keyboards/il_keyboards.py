@@ -18,7 +18,6 @@ def kb_talk():
             names.append(file.read().split(',', 1)[0][5:])
     btns = zip(files, names)
     for f in btns:
-        # keyboard.button(text=f[1], callback_data=f[0].rsplit('.')[0])
         keyboard.button(
             text=f[1],
             callback_data=TalkPerson(

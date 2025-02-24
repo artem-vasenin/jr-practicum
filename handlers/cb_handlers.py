@@ -7,6 +7,7 @@ from utils import get_text
 from state.state import TalkState
 from keyboards import kb_back, TalkPerson
 
+
 cb_router = Router()
 
 @cb_router.callback_query(TalkPerson.filter(F.button == 'tk'))

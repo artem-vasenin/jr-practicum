@@ -7,9 +7,9 @@ from aiogram.fsm.context import FSMContext
 from config import IMG
 from utils import get_text
 from classes import ai_client
-from state.state import FSMState, TalkState
 from .com_handlers import com_start
 from keyboards import kb_random, kb_back
+from state.state import FSMState, TalkState
 
 
 ai_router = Router()
