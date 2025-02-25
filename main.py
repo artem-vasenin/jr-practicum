@@ -1,7 +1,7 @@
 import asyncio
 from aiogram import Bot, Dispatcher
 
-from config import TG_TOKEN
+from config import TG_AIO_TOKEN
 from handlers import router
 
 def on_started():
@@ -11,7 +11,7 @@ def on_stopped():
     print('Bot stopped')
 
 async def start_bot():
-    bot = Bot(token=TG_TOKEN)
+    bot = Bot(token=TG_AIO_TOKEN)
     dispatch = Dispatcher()
     dispatch.startup.register(on_started)
     dispatch.shutdown.register(on_stopped)

@@ -19,11 +19,14 @@ async def get_photo(message: Message):
 @command_router.message(Command('start'))
 async def com_start(message: Message):
     msg = await get_text('main')
-    await message.answer_photo(
-        photo=IMG['gpt'],
-        caption=msg,
-        reply_markup=kb_start()
-    )
+    try:
+        await message.answer_photo(
+            photo=IMG['gpt'],
+            caption=msg,
+            reply_markup=kb_start()
+        )
+    except Exception as e:
+        print(e)
 
 @command_router.message(F.text == 'Диалог с GPT')
 @command_router.message(Command('gpt'))
