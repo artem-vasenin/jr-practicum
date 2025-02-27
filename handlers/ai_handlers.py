@@ -1,8 +1,8 @@
 from aiogram import F, Router
-from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.enums import ChatAction
 from aiogram.fsm.context import FSMContext
+from aiogram.types import Message, CallbackQuery
 
 from config import IMG
 from utils import get_text
@@ -56,3 +56,7 @@ async def ai_gpt_talk(message: Message, state: FSMContext):
     data['dialog'].append({'role': 'assistant', 'content': caption})
     await state.update_data(dialog=data['dialog'])
     await message.answer(text=caption, reply_markup=kb_back())
+
+@ai_router.callback_query(F.data.startswith('quiz_'))
+async def get_question(cb: CallbackQuery):
+    print(cb.data)

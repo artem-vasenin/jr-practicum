@@ -5,3 +5,6 @@ class FSMState(StatesGroup):
 
 class TalkState(StatesGroup):
     wait_for_answer = State()
+
+class QuizState(StatesGroup):
+    quiz = State()

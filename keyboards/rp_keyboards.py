@@ -6,7 +6,7 @@ def kb_start():
     keyboard.button(text='Рандомный факт')
     keyboard.button(text='Диалог с GPT')
     keyboard.button(text='Диалог с личностью')
-    keyboard.button(text='Квиз')
+    keyboard.button(text='QUIZ')
     keyboard.button(text='Помощь')
     keyboard.adjust(2, 3)
     return keyboard.as_markup(resize_keyboard=True)

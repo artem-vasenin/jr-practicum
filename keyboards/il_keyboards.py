@@ -28,3 +28,14 @@ def kb_talk():
         )
     keyboard.adjust(*[1]*len(files))
     return keyboard.as_markup(resize_keyboard=True)
+
+
+def kb_quiz():
+    keyboard = InlineKeyboardBuilder()
+    keyboard.button(text='Python', callback_data='quiz_prog')
+    keyboard.button(text='Биология', callback_data='quiz_biology')
+    keyboard.button(text='Математика', callback_data='quiz_math')
+    keyboard.button(text='Ещё вопрос', callback_data='quiz_more')
+    keyboard.button(text='Назад', callback_data='Назад')
+    keyboard.adjust(3, 2)
+    return keyboard.as_markup(resize_keyboard=True)
