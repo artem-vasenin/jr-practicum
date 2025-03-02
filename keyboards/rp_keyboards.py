@@ -18,6 +18,16 @@ def kb_random():
     keyboard.adjust(2)
     return keyboard.as_markup(resize_keyboard=True)
 
+def kb_quiz():
+    keyboard = ReplyKeyboardBuilder()
+    keyboard.button(text='Python')
+    keyboard.button(text='Биология')
+    keyboard.button(text='Математика')
+    keyboard.button(text='Ещё вопрос')
+    keyboard.button(text='Назад')
+    keyboard.adjust(4, 1)
+    return keyboard.as_markup(resize_keyboard=True)
+
 def kb_back():
     keyboard = ReplyKeyboardBuilder()
     keyboard.button(text='Назад')

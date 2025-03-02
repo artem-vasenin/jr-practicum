@@ -7,4 +7,4 @@ class TalkState(StatesGroup):
     wait_for_answer = State()
 
 class QuizState(StatesGroup):
-    quiz = State()
+    wait_for_answer = State()

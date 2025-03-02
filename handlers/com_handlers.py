@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 
 from config import IMG
 from utils import get_text
-from state.state import FSMState
+from state.state import FSMState, QuizState
 from keyboards import kb_start, kb_back, kb_talk, kb_quiz
 
 
@@ -43,7 +43,13 @@ async def ai_talk_com(message: Message):
 
 @command_router.message(F.text == 'QUIZ')
 @command_router.message(Command('quiz'))
-async def ai_quiz_com(message: Message):
+async def ai_quiz_com(message: Message, state: FSMContext):
     text = await get_text('quiz')
-    await message.bot.send_chat_action(message.from_user.id, ChatAction.TYPING)
     await message.answer_photo( photo=IMG['quiz'], caption=text, reply_markup=kb_quiz())
+    prompt = await get_text('quiz', is_prompt=True)
+    await state.set_state(QuizState.wait_for_answer)
+    await state.update_data(
+        right=0,
+        wrong=0,
+        dialog=[{'role': 'system', 'content': prompt}],
+    )
